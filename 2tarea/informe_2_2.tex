@@ -1,0 +1,31 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[left=2cm,top=2cm,bottom=2cm,right=2cm]{geometry}
+\title{Tarea 2 - Problema 2 - Programación avanzada}
+\author{Nicolás Aylwin}
+\date{}
+\begin{document}
+\maketitle
+Se busca rotar el vector
+\begin{equation*}
+\vec{v}=-2.7254\hat{x}+4.18527\hat{y}+-0.2361\hat{z}
+\end{equation*}
+Con los ángulos de euler.
+
+Primero se definió en el programa las constantes explicitadas en la tarea (así usarlas como variables globales). Luego se definieron tres funciones para lograr sobrecargar la multiplicación en matrices de forma mas simple. En específico, la obtención de la fila de una matriz, la obtención de una columna, y el producto punto entre dos vectores. Cabe destacar que las matrices se representaron como vectores de vectores.
+
+Luego se sobrecargó la multiplicación entre matrices, definiendose de la siguiente forma. Siendo $A$ y $B$ matrices que se pueden multiplicar (cumpliendo condiciones de filas y columnas), y $C=AB$ el resultado de su multiplicación, se tiene que cada elemento $c_{ij}$ de $C$, es el producto punto del vector que es fila $i$ de $A$ con el vector que es columna $j$ de $B$.
+
+En la sobrecarga propiamente tal, se creó primero una matriz del tamaño resultante de la multiplicación, a la que luego se agregaron los elementos resultantes de esta.
+
+Luego se definió la sobrecarga del operador redireccionador para poder imprimir una matriz.
+
+Por último se definieron tres funciones que reciben un valor y entregan una matriz de euler evaluada en ese valor (uno para $\psi$,$\phi$ y $\theta$).
+
+Finalmente en el `main', se crea el vector pedido, se expone, y se rota por cada uno de los ángulos (mostrando cada paso). Al rotar por $\psi$ se expone el vector resultante final, y luego se realiza la rotación inversa (multiplicando en sentido contrario las matrices y usando el mismo ángulo pero negativo) y se expone el vector resultante de esto (que claramente es el original).
+
+Todos los resultados son expuestos en la terminal, luego de usar el ejecutable.  
+\end{document}

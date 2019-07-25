@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[left=2cm,top=2cm,bottom=2cm,right=2cm]{geometry}
+\title{Tarea 5 - Problema 1 - Programación avanzada}
+\author{Nicolás Aylwin}
+\date{}
+\begin{document}
+\maketitle
+\section{Desarrollo Teórico}
+Primero determinemos el ángulo respectivo de cada carga. Sea este $\theta _i$ para la carga $q_i$. Si inicialmente se tiene una distribución estable, las cargas deben estar equidistantes sobre el anillo, por lo que los ángulos entre ellas deben ser idénticos. Siendo así para $N+1$ cargas:
+\begin{align}
+\label{pos}
+\theta _i=\frac{2\pi}{N+1}i
+\end{align}
+Con $i$ de $0$ hasta $N$. Para el problema asumiremos que la carga $q_0$ es retirada, la que se encuentra claramente en $\theta _0=0$.
+
+Ahora analicemos la fuerza que siente $q_i$. Ignorando fuerzas por efecto de campos magnéticos, tenemos que por fuerza de Coulomb, la fuerza que siente $q_i$ dado $q_j$ es:
+\begin{align*}
+\vec{F}=\frac{Kq_iq_j}{r_{ij}^3}\vec{r_{ij}}
+\end{align*}
+Haciendo un poco de algebra:
+\begin{align*}
+\vec{r_{ij}}&=\vec{r_i}-\vec{r_j}=((\vec{r_i}-\vec{r_j})\cdot{\hat{r_i}})\hat{r_i}+((\vec{r_i}-\vec{r_j})\cdot\hat{\theta_i})\hat{\theta_i} \\
+\vec{r_{ij}}&=r((cos\theta_i-cos\theta_j)\cos\theta_i+(\sin\theta_i-\sin\theta_j)\sin\theta_i)\hat{r_i}\\&+r((cos\theta_i-cos\theta_j)(-\sin\theta_i)+(\sin\theta_i-\sin\theta_j)\cos\theta_i)\hat{\theta_i}\\
+\vec{r_{ij}}&=r(1-(\cos\theta_i\cos\theta_j+\sin\theta_i\sin\theta_j))\hat{r_i}+r(\sin\theta_i\cos\theta_j-\sin\theta_j\cos\theta_i)\hat{\theta_i}\\
+\vec{r_{ij}}&=r(1-\cos(\theta_i-\theta_j))\hat{r_i}+r(\sin(\theta_i-\theta_j))\hat{\theta_i}
+\end{align*}
+Por otro lado, el módulo al cubo:
+\begin{align*}
+r_{ij}^3&=(r^2(1-\cos(\theta_i-\theta_j))^2+r^2(\sin(\theta_i-\theta_j)^2)^{3/2}\\
+r_{ij}^3&=r^3(2(1-\cos(\theta_i-\theta_j)))^{3/2}\\
+r_{ij}^3&=8r^3\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|
+\end{align*}
+Esto último dado que estamos calculando un módulo y necesitamos que sea siempre positivo.
+Con esto la fuerza sobre la carga $q_i$ dadas las otras cargas, contabilizando a todas excepto a ella misma (por no autointeracción) será:
+\begin{align*}
+\vec{F_{ij}}=\sum_{j=1,j\neq i}^N \frac{Kq_iq_j}{8r^2\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|}((1-\cos(\theta_i-\theta_j))\hat{r_i}+(\sin(\theta_i-\theta_j))\hat{\theta_i})
+\end{align*} 
+Dado que la carga está restringida al anillo, la fuerza en $\hat{r_i}$ es completamente contrarrestada por la que ejerce este mismo (acción y reacción). Siendo así, solo nos interesa la componente en $\hat{\theta_i}$, por lo que la fuerza total en la carga $q_i$ es:
+\begin{align*}
+F_{ij}\hat{\theta_i}&=\sum_{j=1,j\neq i}^N \frac{Kq_iq_j}{8r^2\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|}((\sin(\theta_i-\theta_j))\hat{\theta_i})\\
+F_{ij}\hat{\theta_i}&=\frac{K}{8r^2}\sum_{j=1,j\neq i}^N \frac{q_iq_j\sin(\theta_i-\theta_j)}{\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|}\hat{\theta_i}
+\end{align*}
+Considerando que las cargas son adimensionales, y tanto estas como el radio valen uno tenemos finalmente:
+\begin{align*}
+F_{ij}\hat{\theta_i}&=\sum_{j=1,j\neq i}^N \frac{\sin(\theta_i-\theta_j)}{8\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|}\hat{\theta_i}
+\end{align*}
+Dado que las cargas están restringidas, las masas, radios y cargas son uno (y adimensionales) y todo movimiento está restringido a $\hat{\theta}$, la ecuación diferencial que describe la evolución de una carga cualquiera será:
+\begin{align}
+\label{aceler_tetha}
+f(t)&=\theta_i(t) \nonumber \\
+v(t)&=f'(t)=\dot{\theta_i}(t)\nonumber \\
+a(t)&=f''(t)=\ddot{\theta_i}(t)=\sum_{j=1,j\neq i}^N \frac{\sin(\theta_i-\theta_j)}{8\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|}
+\end{align}
+
+Por otro lado, la fuerza total que sentirá el anillo es la fuerza de las cargas intentando escapar de este. O sea la componente radial de la fuerza de coulomb de cada una de las cargas mas la fuerza radial que ejerce cada carga sobre el anillo por el hecho de rotar (la reacción de la fuerza centrípeta ejercida por el anillo para mantener en este a las cargas). Tomando en cuenta la fuerza de coulomb radial sobre la carga $q_i$ y el aporte de la reacción de la fuerza centrípeta (con lo ya mencionado sobre las cargas, el radio y la masa):
+\begin{align*}
+\vec{F}=\dot{\theta_i^2}\hat{r_i}+\sum_{j=1,j\neq i}^N \frac{(1-\cos(\theta_i-\theta_j))\hat{r_i}}{8\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|}
+\end{align*}
+La fuerza total será la suma sobre todas las cargas $q_i$. Además, como $\hat{r_i}$ depende de $\theta_i$, resulta mejor expresarlo en cartesianas, para realizar la suma vectorial correspondiente. Considerando todo esto se tiene finalmente:
+\begin{align}
+\label{f_anillo}
+\vec{F_T}&=\sum_{i=1}^N\dot{\theta_i^2}\hat{r_i}+\sum_{i=1}^N\sum_{j=1,j\neq i}^N \frac{(1-\cos(\theta_i-\theta_j))\hat{r_i}}{8\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|} \nonumber \\
+\vec{F_T}&=\sum_{i=1}^N\dot{\theta_i^2}(\cos(\theta_i)\hat{i}+\sin(\theta_i)\hat{j})+\sum_{i=1}^N\sum_{j=1,j\neq i}^N \frac{(1-\cos(\theta_i-\theta_j))}{8\left|\sin^3\left(\frac{\theta_i-\theta_j}{2}\right)\right|}(\cos(\theta_i)\hat{i}+\sin(\theta_i)\hat{j})
+\end{align} 
+Lo único que falta determinar es la energía total del sistema. Considerando la energía cinética y potencial de cada partícula, y los valores para masas,cargas y radio:
+\begin{align}
+\label{energia}
+E_T&=\sum_{i=1}^N\frac{mv^2}{2}+\frac{1}{2}\sum_{i=1}^N\sum_{j=1,j\neq i}^N\frac{Kq_iq_j}{r_{ij}} \nonumber \\
+E_T&=\sum_{i=1}^N\frac{\dot{\theta_i}^2}{2}+\frac{1}{2}\sum_{i=1}^N\sum_{j=1,j\neq i}^N\frac{1}{r_{ij}}
+\end{align}
+El 1/2 en la energía potencial es por considerar cada distancia dos veces en la sumatoria.
+\section{Programa}
+El programa es desarrollado en el archivo ``problema1.cc'' teniendo dependencia de una clase de integradores (odeint.h y .cc) y de una de matrices (matriz.h). Este comienza con la declaracion de 4 funciones. 
+
+La primera, ``coulumb'' es la encargada de devolver dentro de los distintos integradores la aceleración enunciada en la Ec.(\ref{aceler_tetha}), además escribe la fuerza total sobre el anillo (Ec.(\ref{f_anillo})) en una matriz auxiliar.
+
+La segunda ``pos'', genera una matriz de una columna y n filas (con n la cantidad de particulas que quedan luego de sacar una) con las posiciones en $\theta$ según lo expresado en la Ec.(\ref{pos}).
+
+La tercera ``energia'' se encarga de calcular a cada paso la energía total del sistema (según la Ec.(\ref{energia})) y entregar este resultado en una matriz de una fila y m columnas (con m cantidad de pasos). Recibe la matriz de matrices generada por los integradores.
+
+Por último, la cuarta función ``pasos\_20'' se encarga de crear los archivos solicitados, recibe el nombre del archivo, la matriz de matrices resultante de cada integrador y el paso (para imprimirlo).
+
+El programa comienza recibiendo los tres argumentos por main exigidos (cantidad de partículas, tiempo final y paso). Se asume por defecto que la cantidad de partículas recibidas es ya habiendo quitado la carga. Luego se invoca a la función ``pos'', para crear la matriz de posiciones iniciales ``posi''. Se crea una copia de esta pero con ceros para utilizar de velocidades iniciales. También se agrega una tercera matriz de n filas y 2 columnas, donde se guardará a cada paso la fuerza sobre el anillo en $\hat{i}$ y $\hat{j}$.
+Estas tres matrices junto al tiempo inicial (como cero), y el paso se usan para crear el objeto tipo odeint llamado ``anillo''.
+
+Luego se usa cada uno de los integradores, definidos como métodos de este objeto. Estas reciben la función ``coulomb'' y el tiempo final (ingresado en los argumentos de main). Cada uno de estos entrega una matriz de matrices, donde las columnas son cada paso, y las filas contienen toda la información relevante del sistema. La primera fila contiene el tiempo, la segunda las posiciones de todas las cargas, la tercera todas las velocidades, la cuarta todas las aceleraciones y la quinta la fuerza sobre el anillo (primera columna $\hat{i}$ y segunda $\hat{j}$).
+
+Finalmente se exportan los datos solicitados a archivos separados con el metodo.dat como nombre. Esto a través de la función ``pasos\_20'', la cual se encarga en algún punto de llamar a la función ``energía'' para almacenar esta también.
+
+\section{Resultados y compilación}
+Para realizar todo lo anterior solo basta utilizar make en la terminal. Los archivos están estructurados de tal manera que cada fila es un tiempo, en orden de izquierda a derecha cada fila contiene: tiempo, paso, posiciones, velocidades, energía total, fuerza sobre el anillo en $\hat{i}$ y en $\hat{j}$. Todos estos separados por una tabulación.
+
+Por otro lado, se tiene una carpeta extra llamada ``separados'', donde se encuentran los ejecutables del mismo programa pero solo usando un integrador y evitando la creación del archivo. Así poder comprobar con estos la latencia del integrador utilizado (a través del comando time).
+
+En particular, para un sistema de 20 particulas a un tiempo final de 100 con un paso de 0.1 se tiene para cada metodo:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Integrador} & \textbf{Tiempo real {[}s{]}} \\ \hline
+Euler-Cromer        & 0.774                        \\ \hline
+Pefrl               & 3.080                        \\ \hline
+Rk4                 & 2.507                        \\ \hline
+Velocity-Velver     & 1.893                        \\ \hline
+\end{tabular}
+\end{table}
+\end{document}

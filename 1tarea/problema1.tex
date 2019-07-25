@@ -1,0 +1,20 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\title{Tarea 1 - Problema 1 - Programación Avanzada}
+\author{Nicolás Aylwin}
+\date{}
+\begin{document}
+\maketitle
+El programa se encarga de obtener la posición del centro de masas de un sistema discreto de partículas. También calcula la masa total. Para esto utiliza la conocida fórmula:
+\begin{equation}
+\vec{r}_{cm}=\frac{1}{M}\sum_{i}^{n}m_{i}\vec{r_i} 
+\end{equation}
+Donde $n$ es la cantidad de partículas, $\vec{r}_{cm}$ la posición del centro de masa, $M$ la masa total, $m_i$ las masas de cada una de las partículas y $\vec{r_i}$ sus respectivas posiciones.
+
+El método utilizado es principalmente el uso de dos ciclos `for'; uno para almacenar la información que entregue el usuario a través de la terminal, y el otro para calcular lo mencionado usando la Ec.(1). La información se almacena en una matriz de `$n$ x $3$', donde cada vector de tres dimensiones almacena posición en $x$, en $y$ y la masa de una partícula en específico. Esta misma se utiliza en el segundo ciclo para poder calcular lo buscado.
+
+Luego del cálculo se vuelcan los resultados en pantalla de la terminal y así termina la ejecución del programa.
+
+Cabe destacar que el ingreso de los datos es a través del comando `cin', por lo que se admiten como separaciones de distintas variables; tabulaciones, espacios. Y con enter se ingresan al programa.
+\end{document}

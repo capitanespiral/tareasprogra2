@@ -1,0 +1,124 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[left=2cm,top=2cm,bottom=2cm,right=2cm]{geometry}
+\title{Tarea 5 - Problema 2 - Programación avanzada}
+\author{Nicolás Aylwin}
+\date{}
+\begin{document}
+\maketitle
+\section{Desarrollo teórico}
+Asumimos que se desean interpolar $n+1$ puntos, siendo el primer punto $(x_0,y_0)$ y el último $(x_n,y_n)$. Nuestra función Spline sera una función a trozos de tal manera:
+$$
+S(x) =
+\left\{ \begin{array}{lcc}
+C_1(x) \quad ,  \quad x_0 \leq x \leq x_1\\
+\vdots \\
+C_i(x) \quad , \quad x_{i-1} < x \leq x_i\\
+\vdots\\
+C_n(x) \quad , \quad x_{n-1} < x \leq x_n \\
+             \end{array}
+   \right.
+   $$
+El desafio resulta ser encontrar los $n$ polinomios $C_i(x)$ que componen al Spline. Las tres condiciones basicas son:
+\begin{itemize}
+\item[1)] $C_i(x_{i-1})=y_{i-1} \quad \wedge \quad C_i(x_{i})=y_{i} \quad \forall i\in\{1,\dots,n\}$
+\item[2)] $C_i'(x_i)=C'_{i+1}(x_i) \quad \forall i\in\{1,\dots,n-1\}$
+\item[3)] $C_i''(x_i)=C''_{i+1}(x_i) \quad \forall i\in\{1,\dots,n-1\}$
+\end{itemize}
+La primera condición da cuenta de que el spline es continuo para cada punto. Las otras dos dan cuentan de continuidad en la primera y la segunda derivada (así se fuerza la suavidad del spline).
+
+Como buscamos splines cúbicos, cada $C_i(x)$ es un polinomio cúbico, por lo que por cada $C_i(x)$ hay cuatro incógnitas. Se concluye que hay $4n$ incógnitas a determinar, y las tres condiciones enunciadas nos entregan $n+n+(n-1)+(n-1)=4n-2$ ecuaciones. Las otras dos las obtenemos de la condición de periodicidad. Sean estas dos ecuaciones faltantes:
+\begin{itemize}
+\item[1)]$C'_1(x_0)=C'_n(x_n)$
+\item[2)]$C''_1(x_0)=C''_n(x_n)$
+\end{itemize}
+Ahora definamos la segunda derivada evaluada en alguno de los puntos donde deseamos interpolar:
+\begin{align*}
+M_i&=S''(x_i) \quad \forall i\in\{0,\dots,n\} 
+\end{align*}
+En particular se tiene:
+\begin{align*}
+S''(x_i)&=C_i''(x_i)=C''_{i+1}(x_i)=M_i \quad \forall i\in\{1,\dots,n-1\} \\
+S''(x_0)&=C_1''(x_0)=M_0\\
+S''(x_n)&=C_n''(x_n)=M_n
+\end{align*}
+Para determinar cada $C_i$ es cúbico, cada $C''_i$ es lineal. Ahora interpolemos $C''_i(x)$ entre $x_{i-1}$ y $x_{i}$ según lagrange. Se tiene:
+\begin{align*}
+C_i''(x)=C_i''(x_{i-1})\frac{(x-x_i)}{x_{i-1}-x_i}+C_i''(x_i)\frac{(x-x_{i-1})}{x_i-x_{i-1}}
+\end{align*}
+Usando los $M_i$ recién definidos y si definimos $h_i=x_i-x_{i-1}$ la expresión anterior queda:
+\begin{align*}
+C_i''(x)=M_{i-1}\frac{(x_i-x)}{h_i}+M_i\frac{(x-x_{i-1})}{h_i}
+\end{align*}
+Integrando una vez:
+\begin{align*}
+C_i'(x)=-M_{i-1}\frac{(x_i-x)^2}{2h_i}+M_i\frac{(x-x_{i-1})^2}{2h_i}+A
+\end{align*}
+Integrando nuevamente:
+\begin{align*}
+C_i(x)=M_{i-1}\frac{(x_i-x)^3}{6h_i}+M_i\frac{(x-x_{i-1})^3}{6h_i}+Ax+B
+\end{align*}
+Si usamos la condición 1) sobre la continuidad del spline para los puntos $(x_{i-1},y_{i-1})$ y $(x_i,y_i)$, se pueden obtener las constantes A y B. Luego con álgebra podemos llegar a la siguiente expresión para cada $C_i$:
+\begin{align}
+\label{C's}
+C_i(x)=M_{i-1}\frac{(x_i-x)^3}{6h_i}+M_i\frac{(x-x_{i-1})^3}{6h_i}+\left(y_{i-1}-\frac{M_{i-1}h_i^2}{6}\right)\frac{(x_i-x)}{h_i}+\left(y_{i}-\frac{M_{i}h_i^2}{6}\right)\frac{(x-x_{i-1})}{h_i}
+\end{align}
+En esta ecuación las únicas incógnitas son las $M_i$, por lo que si obtenemos estas está resuelto el problema. Para esto derivemos la Ec.(\ref{C's}) y evaluemosla en $x_i$:
+\begin{align*}
+C_i'(x)&=-M_{i-1}\frac{(x_i-x)^2}{2h_i}+M_i\frac{(x-x_{i-1})^2}{2h_i}+\frac{y_i-y_{i-1}}{hi}-\frac{(M_i-M_{i-1})h_i}{6}\\
+C_i'(x_i)&=M_i\frac{h_i}{2}+\frac{y_i-y_{i-1}}{hi}-\frac{(M_i-M_{i-1})h_i}{6}
+\end{align*}
+Esta misma evaluación en el siguiente polinomio será:
+\begin{align*}
+C_{i+1}'(x_i)&=-M_i\frac{h_{i+1}}{2}+\frac{y_{i+1}-y_{i}}{h_{i+1}}-\frac{(M_{i+1}-M_{i})h_{i+1}}{6}
+\end{align*}
+Y por las condiciones tenemos que:
+\begin{align*}
+C_{i+1}'(x_i)&=C_i'(x_i)\\
+M_i\frac{h_i}{2}+\frac{y_i-y_{i-1}}{hi}-\frac{(M_i-M_{i-1})h_i}{6}&=-M_i\frac{h_{i+1}}{2}+\frac{y_{i+1}-y_{i}}{h_{i+1}}-\frac{(M_{i+1}-M_{i})h_{i+1}}{6}
+\end{align*}
+Y reordenando esta última expresión para juntar todas las $M$ correspondientes, si además definimos $k_i=y_i-y_{i-1}$ tendremos finalmente:
+\begin{align}
+\label{M}
+\frac{h_i}{6}M_{i-1}+\frac{h_i+h_{i+1}}{3}M_i+\frac{h_{i+1}}{6}M_{i+1}=\frac{k_{i+1}}{h_{i+1}}-\frac{k_i}{h_i}
+\end{align} 
+Esta última expresión es valida para $i \in \{1,\dots,n-1\}$ claramente. Para $i=1$ y $i=n-1$, se necesita conocer el valor de $M_0$ y $M_n$ respectivamente. Utilicemos las condiciones mencionadas sobre la periodicidad para obtener estos:
+\begin{align*}
+C''_1(x_0)&=C''_n(x_n)\\
+M_0&=M_n
+\end{align*} 
+Esto último es directo de la definición de $M_i$. De la otra condición:
+\begin{align*}
+C'_1(x_0)&=C'_n(x_n) \\
+-M_0\frac{h_1}{2}+\frac{k_1}{h_1}-\frac{(M_1-M_0)}{6}h_1&=M_n\frac{h_n}{2}+\frac{k_n}{h_n}+\frac{(M_n-M_{n-1})}{6}h_n\\
+-\frac{M_0h_1}{3}+\frac{k_1}{h_1}-\frac{M_1h_1}{6}&=\frac{M_nh_n}{3}+\frac{k_n}{h_n}+\frac{M_{n-1}h_n}{6}
+\end{align*}
+Considerando $M_0=M_n$, la resolución de la última expresión queda:
+\begin{align*}
+M_0=M_n=\frac{3}{(h_1+h_n)}\left(\frac{k_1}{h_1}-\frac{k_n}{h_n}-\frac{h_1M_1}{6}-\frac{h_nM_{n-1}}{6}\right)
+\end{align*}
+Siendo así, volvamos a la Ec.(\ref{M}) con $i=1$ y $i=n-1$ (esta es la primera fila y última fila de la matriz respectivamente):
+\begin{align*}
+\frac{h_1}{6}M_{0}+\frac{(h_1+h_{2})}{3}M_1+\frac{h_{2}}{6}M_{2}&=\frac{k_{2}}{h_{2}}-\frac{k_1}{h_1} \\
+\frac{h_{n-1}}{6}M_{n-2}+\frac{(h_{n-1}+h_{n})}{3}M_{n-1}+\frac{h_{n}}{6}M_{n}&=\frac{k_{n}}{h_{n}}-\frac{k_{n-1}}{h_{n-1}}
+\end{align*}
+Usando la expresión sobre $M_0$ y $M_n$, además de reagrupar términos se llega a:
+\begin{align*}
+\left(\frac{(h_1+h_2)}{3}-\frac{h_1^2}{12(h_1+h_n)}\right)M_1+\frac{h_2}{6}M_2-\frac{h_1h_n}{12(h_1+h_n)}M_{n-1}&=\\ \frac{k_2}{h_2}-\frac{k_1}{h_1}&+\frac{k_nh_1}{2h_n(h_1+h_n)}-\frac{k_1}{2(h_1+h_n)}\\
+-\frac{h_1h_n}{12(h_1+h_n)}M_{1}+\frac{h_{n-1}}{6}M_{n-2}+\left(\frac{(h_{n-1}+h_n)}{3}-\frac{h_n^2}{12(h_1+h_n)}\right)M_{n-1}&=\\ \frac{k_n}{h_n}-\frac{k_{n-1}}{h_{n-1}}&-\frac{k_1h_n}{2h_1(h_1+h_n)}+\frac{k_n}{2(h_1+h_n)}
+\end{align*}
+Donde una expresión es la primera fila de la matriz y la otra es la última. Teniendo estos valores basta expresar la matriz resultante, que de haber entregado $n+1$ puntos quedará de $n-1$ filas y misma cantidad de columnas, con el vector de incógnitas conteniendo $M_i$ con $i \in \{1,\dots ,n-1\}$. Se puede notar que en la primera y en la última fila aparece un termino extra en las esquinas (las dos esquinas que antes eran cero, con splines naturales) y que los valores al otro lado de la ecuación para la primera y la última fila son mucho mas complejos que para todas las otras.
+\section{Programa}
+El programa tiene dependencia de una clase de interpoladores (interpol.h e interpol.cc), una clase de polinomios en templates (poli.h) y una clase de matrices de templates (matriz.h). En la de interpoladores, se tiene el objeto ``i\_pol'', que almacena los puntos entregados en una matriz y  además la cantidad de datos entregados (por comodidad en los métodos). Se definen dos métodos, lagrange y splines. Este último tiene una opción para hacerlos periódicos, puesto solo cambia la primera y la última fila de la matriz (que se agregan a parte), el primer y último valor del vector al otro lado de la ecuación, y los valores de $M_0$ y $M_n$. Como la matriz a resolver resulta ser tridiagonal periódica se implemento en la clase de matrices (y se utilizó en la de interpoladores) el método ANW (ahlberg-nilsen-walsh) para resolver esta.
+
+El método de splines devuelve una matriz de polinomios (los $C_i(x)$). Con una función externa a la clase (pero dentro de interpol.cc) llamada ``puntos'' se permite evaluar ordenadamente cada polinomio donde corresponda, y se devuelve una matriz con los datos evaluados. Luego con otra funcion definida en el mismo .cc, llamada `file' se logra crear un archivo con tales datos y de cierto nombre.
+
+El programa en si requerido solo cuenta con main, donde se recibe el archivo, la cantidad de puntos, se crea el interpolador, se aplica spline con el char `p' para que sean periodicos, se usa la función puntos, luego file, y se acaba el programa.
+\section{Resultados y compilación}
+La carpeta contiene un archivo datos.txt de prueba y un script de gnuplot llamado grafico.gp. Al realizar make se compilara y se utilizará el programa con el archivo de prueba y 1000 puntos. Luego se correra el script de gnuplot y se creara una imagen de formato png, donde se muestra el spline y los puntos de datos.txt. Por último se abre la imagen recién creada.
+
+De desear probar con otros datos basta usar el ejecutable como se pide en la tarea.
+\end{document}

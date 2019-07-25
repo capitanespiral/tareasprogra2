@@ -1,0 +1,107 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[left=2cm,top=2cm,bottom=2cm,right=2cm]{geometry}
+\title{Tarea 1 - Problema 2 - Programación avanzada}
+\author{Nicolás Aylwin}
+\date{}
+\begin{document}
+\maketitle
+\begin{itemize}
+\item[a)]Velocidad con que sale del primer rebote:
+
+Primero por conservacion de la energía, o sea, conversión de energía potencial gravitatoria en cinética se tendrá que la rapidez con que llega al chocar es:
+\begin{equation}
+\label{rap}
+v_0=\sqrt{2g(y_0-y_1)}
+\end{equation}
+Siendo $y_0$ e $y_1$ la posición en $y$ inicial y del primer rebote respectivamente, $g$ aceleración de la gravedad y $v_0$ la rapidez.
+
+Luego, se tiene que la velocidad con que choca, usando Ec.(\ref{rap}) es:
+\begin{equation}
+\label{vel1}
+\vec{v_0}=v_0(0\hat{\imath}-\hat{\jmath})=-\sqrt{2g(y_0-y_1)}\hat{\jmath}
+\end{equation}
+Por otro lado, el ángulo menor del plano formado por la recta tangente al punto donde choca es:
+\begin{equation}
+\label{alfa}
+\alpha=-\arctan(\sin'(x_0))=-\arctan(\cos(x_0))
+\end{equation}
+Con lo que es posible encontrar vectores unitarios tal que uno sea tangente y otro perpendicular a la curva en el punto $(x_0,y_1)$. Usando trigonometría y considerando como llega la pelota (por conveniencia) se usarán:
+\begin{equation}
+\label{unit_plano}
+\hat{t}=(\cos(\alpha),-\sin(\alpha)) \quad;\quad \hat{n}=(-\sin(\alpha),-\cos(\alpha))
+\end{equation}
+Siendo $\hat{t}$ la componente tangencial y $\hat{n}$ la componente perpendicular. Ambos presentados respecto a $\hat{\imath}$ y $\hat{\jmath}$.
+
+Se sigue que la componente tangencial y perpendicular al plano de la velocidad presentada en la Ec.(\ref{vel1}) será:
+\begin{equation*}
+\vec{v_t}=(\vec{v_0}\cdot\hat{t})\hat{t}\quad ;\quad \vec{v_n}=(\vec{v_0}\cdot\hat{n})\hat{n}
+\end{equation*}
+Desarrollando esto último, usando Ecs.(\ref{vel1}), (\ref{unit_plano}) y expresando respecto a $\hat{\imath}$ y $\hat{\jmath}$:
+\begin{align}
+\vec{v_t}&=\left(\sqrt{2g(y_0-y_1)}\sin(\alpha)\cos(\alpha),-\sqrt{2g(y_0-y_1)}\sin^{2}(\alpha)\right) \\
+\vec{v_n}&=\left(-\sqrt{2g(y_0-y_1)}\cos(\alpha)\sin(\alpha),-\sqrt{2g(y_0-y_1)}\cos^{2}(\alpha)\right)
+\end{align}
+Se omitió expresar $\alpha$ según la Ec.(\ref{alfa}) por estética.
+
+Además, por la conservación del momentum y energía, luego del choque, la componente tangencial al plano se mantiene igual y la componente perpendicular se invierte. Dado esto, la velocidad con que sale del primer rebote, en terminos de $\hat{\imath}$ y $\hat{\jmath}$, usando las Ecs.(5) y (6) finalmente es:
+\begin{align*}
+\vec{v_f}&=\vec{v_t}-\vec{v_n} \\
+\vec{v_f}&=\left(2\sqrt{2g(y_0-y_1)}\sin(\alpha)\cos(\alpha),\sqrt{2g(y_0-y_1)}(\cos^{2}(\alpha)-\sin^{2}(\alpha))\right)
+\end{align*}
+Considerando que $y_1=\sin(x_0)$, $\sin(2\alpha)=2\sin(\alpha)\cos(\alpha)$ y $\cos(2\alpha)=\cos^{2}(\alpha)-\sin^{2}(\alpha)$ se tiene finalmente:
+\begin{equation*}
+\vec{v_f}=\sqrt{2g(y_0-\sin(x_0))}\left(\sin(2\alpha),\cos(2\alpha)\right)
+\end{equation*}
+\item[b)] Expresión para la posición del segundo impacto:
+Como $\vec{v_f}$ sale despedida con velocidad tanto en $x$ como en $y$, se puede analizar como movimiento parabólico. Así se tiene:
+\begin{equation}
+\label{itx}
+x(t)=x_0+v_{fx}t
+\end{equation}
+\begin{equation}
+\label{ity}
+y(t)=y_0+v_{fy}t-\frac{gt^2}{2}=\sin(x_0)+v_{fy}t-\frac{gt^2}{2}
+\end{equation}
+Siendo cada $v_{fi}$ la componente de $\vec{v_f}$ en $x$ e $y$ respectivamente.
+
+Despejando el tiempo en Ec.(\ref{itx}):
+\begin{equation*}
+\frac{x(t)-x_0}{v_{fx}}=t
+\end{equation*}
+Y reemplazando en Ec.(\ref{ity}):
+\begin{equation*}
+y=\sin(x_0)+\frac{v_{fy}}{v_{fx}}(x-x_0)-\frac{g}{2}\left(\frac{x-x_0}{v_{fx}}\right)^2
+\end{equation*}
+Esta última ecuación describe la trayectoria de la parábola que sigue la pelota luego del primer rebote. Basta realizar un sistema de ecuaciones con $y=\sin(x)$ para tener la expresión buscada. Así se concluye:
+\begin{equation}
+\label{trayec}
+f(x)=\sin(x_0)-\sin(x)+\frac{v_{fy}}{v_{fx}}(x-x_0)-\frac{g}{2}\left(\frac{x-x_0}{v_{fx}}\right)^2
+\end{equation}
+Una de las raices de Ec.(\ref{trayec}) corresponde al $x$ del segundo rebote. Suponiendo que este sea $x_1$, se tendrá que la posición del segundo rebote es $(x_1,\sin(x_1))$. 
+\item[c)]En esta sección describiré el programa y como llegar al punto del tercer rebote:
+Primero se definieron todas las funciones que permiten calcular lo recién expuesto analíticamente. Luego de tener todos los valores numéricos de Ec.(\ref{trayec}) (excepto $x$ claramente pues es lo que buscamos), se procedió a graficar la función para analizar sus raíces y así usar el método de Newton-Raphson con conocimiento de que semilla nos llevará a lo que buscamos. Esto implicó derivar Ec.(\ref{trayec}) y crear una función de esta.
+
+Se adjunta el gráfico ``raicesrebote2.png'' de la Ec.(\ref{trayec}) hecho en Gnuplot. En esta se ve que hay cuatro raices; dos menores que $3$, lo que es imposible puesto la pelota rebota hacia la derecha, $3$, pues claramente la parábola que describe el movimiento de la pelota pasa (y en particular choca con $\sin(x)$) por donde parte, y una mayor que $3$. Esta última es la única respuesta con sentido físico.
+
+Luego de obtener la posición del segundo rebote, que llamaré $(x_1,\sin(x_1))$, se obtiene la velocidad con que llega la pelota al segundo rebote. En particular por cinemática se tiene:
+\begin{equation}
+\label{vel2}
+\vec{v_2}=\left(v_{fx},v_{fy}-g\frac{x_1-x_0}{v_{fx}}\right)
+\end{equation}
+Usando Ec.(\ref{vel2}) se puede reiterar el proceso de las componentes tangencial y perpendicular para encontrar la velocidad saliente del segundo rebote. Esta velocidad será $\vec{v_3}$.
+
+Teniendo esta velocidad, basta llegar a la expresión de la posición para el tercer rebote. Siguiendo los mismos pasos previos, pero cambiando las constantes se tiene:
+\begin{equation*}
+g(x)=\sin(x_1)-\sin(x)+\frac{v_{3y}}{v_{3x}}(x-x_1)-\frac{g}{2}\left(\frac{x-x_1}{v_{3x}}\right)^2
+\end{equation*}
+Una de las raíces de esta función corresponderá al $x$ del rebote 3, llamémoslo $x_2$, con lo que la posición de este quedará determinada por $(x_2,\sin(x_2))$.
+
+Esta última raiz también es obtenida con Newton-Raphson. En particular posee dos raíces, donde una es $x_1$ y la otra el esperado $x_2$. Se adjunta de igual manera el gráfico ``raicesrebote3.png'' hecho también con Gnuplot. La semilla en este caso también se escogió usando este gráfico.
+
+El programa se ejecuta y directamente entrega en la terminal las condiciones iniciales y tanto las posiciones como velocidades en cada rebote.
+\end{itemize}
+\end{document}

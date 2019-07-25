@@ -1,0 +1,37 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[left=2cm,top=2cm,bottom=2cm,right=2cm]{geometry}
+\title{Tarea 3 - Problema 2 - Programación avanzada}
+\author{Nicolás Aylwin}
+\date{}
+\begin{document}
+\maketitle
+Buscamos evaluar la siguiente función y su derivada:
+\begin{align*}
+\phi(x)=\frac{2n\pi x}{L}\cosh^3\left(\frac{2n\pi x}{L}\right)\cos^2\left(\frac{2n\pi x}{L}\right)\sinh^4\left(\frac{2n\pi x}{L}\right)\sin\left(\frac{2n\pi x}{L}\right)\exp\left(\frac{2n\pi x}{L}\right)
+\end{align*}
+Para $x \in [-L/2,L/2]$.
+
+Para conseguir esto se utilizó la clase de números duales creados en clases. El programa importa esta además de `fstream' y `string'. Para comenzar se solicita al usuario los valores de $n$ y $L$, estos se almacenan en dos variables tipo `double', además se declara el `dual $x$'. Luego se crean strings para asignar el nombre a dos archivos; `Potencial\_n.dat' y `Potencial\_n\_.dat', ambos contendrán los valores de $x$ en la primera columna, pero $\phi(x)$ y $\phi '(x)$ en la segunda columna respectivamente. Cabe destacar que se usa la parte entera de $n$ para el nombre de estos archivos. 
+
+Luego se entra a un ciclo `for' en el que se asigna en cada iteración un valor a la parte real del dual $x$ dentro del intervalo mencionado (la parte dual como 1 para que derive) y luego se introduce este $x$, $n$ y $L$ a la función `potencial' (única aparte de `main') encargada de evaluar la función y su derivada.
+
+Dentro de `potencial' primero se crea un $c=2\pi n /L$, el cual se multiplica a ambas partes de $x$. Es por un cambio de variable, así aseguramos que el valor evaluado en la derivada sea el correcto. Matemáticamente los duales cumplen:
+\begin{align*}
+f(a+b\epsilon)=f(a)+bf'(a)\epsilon
+\end{align*}
+Por lo que si queremos el cambio correcto de variables (considerando cadena) tenemos que (sea $u$ en este caso el punto donde buscamos evaluar el potencial y su derivada):
+\begin{align*}
+f(cu+c\epsilon)=f(cu)+cf'(cu)\epsilon
+\end{align*}
+Luego se evalua el potencial en este nuevo dual $x$, y se almacena en un dual `res'. Después se evalua si la parte real de este nuevo dual $x$ es múltiplo de $\pi/2$ pues de ese ser el caso, se anularía $\cos^2$ y/o $\sin$ (también $\sinh^4$ en cero al menos). De ser así, se impone la parte real de `res' como cero, pues pese a que la evaluación de estas funciones puede ser muy cerca de cero, la evaluación total del potencial puede alejarse mucho del valor real, dado funciones que crecen rápidamente, como $\exp$ o $\cosh^2$.
+
+Finalmente, se entrega `res' y en el ciclo `for' de `main' se almacena en cada archivo lo especificado en parrafos anteriores. Luego de completar todo el bucle se entrega un mensaje enunciando la creación exitosa de ambos archivos.
+
+La carpeta del problema 2 contiene los dos archivos de duales (duales.cc y duales.h), el archivo del problema2, su ejecutable, y algunos archivos de ejemplo. En particular, se usó el programa para $n=1$ y $L=4$, y se graficaron los resultados con Gnuplot. A modo de comparación se incluyen también las tomas de pantalla de los gráficos entregados por Mathematica en el mismo intervalo.
+
+Cabe destacar, que la función funciona muy bien, pero la derivada a veces presenta problemas en algunos puntos. No logré encontrar la condición para imponer algunos ceros que me muestra Mathematica pero no el gráfico hecho con datos del programa. Los ejemplos presentados fueron (claramente) escogidos con pinza.
+\end{document}
